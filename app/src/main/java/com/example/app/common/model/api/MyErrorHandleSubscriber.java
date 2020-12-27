@@ -15,9 +15,12 @@
  */
 package com.example.app.common.model.api;
 
+import android.content.Context;
 import android.text.TextUtils;
 
 import com.example.app.common.model.bean.response.BasicResponseEntity;
+
+import java.lang.ref.WeakReference;
 
 import io.reactivex.Observer;
 import io.reactivex.annotations.NonNull;
@@ -52,6 +55,12 @@ public abstract class MyErrorHandleSubscriber<T> implements Observer<BasicRespon
         this.mDontShowRespondMsg = noShowMsg;
     }
 
+    protected MyErrorHandleSubscriber() {
+    }
+
+
+    
+
 
     @Override
     public void onSubscribe(@NonNull Disposable d) {
@@ -74,7 +83,6 @@ public abstract class MyErrorHandleSubscriber<T> implements Observer<BasicRespon
     }
 
     public void onFailed() {
-
     }
 
     private void showMsg(BasicResponseEntity<T> baseResponse) {
@@ -85,14 +93,20 @@ public abstract class MyErrorHandleSubscriber<T> implements Observer<BasicRespon
 
 
     public void onSuccessData(T data) {
+        
+
     }
 
 
     public void onFailedCodeData(int code, T data) {
+        
+
     }
 
 
     public void doError(String errorDescription) {
+        
+
         if (!mDontShowExceptionMsg) {
             //todo 显示异常的message
         }
@@ -101,12 +115,16 @@ public abstract class MyErrorHandleSubscriber<T> implements Observer<BasicRespon
 
     @Override
     public void onComplete() {
+        
+
 
     }
 
 
     @Override
     public void onError(@NonNull Throwable t) {
+        
+
         t.printStackTrace();
         //如果你某个地方不想使用全局错误处理,则重写 onError(Throwable) 并将 super.onError(e); 删掉
         //如果你不仅想使用全局错误处理,还想加入自己的逻辑,则重写 onError(Throwable) 并在 super.onError(e); 后面加入自己的逻辑
@@ -114,5 +132,7 @@ public abstract class MyErrorHandleSubscriber<T> implements Observer<BasicRespon
         String errorTypeDes = ApiException.handleException(t).getMessage();
         doError(errorTypeDes);
     }
+
+
 }
 

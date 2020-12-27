@@ -48,6 +48,8 @@ public class Second_pagePresenter extends BasePresenter<Second_pageContract.Mode
         mModel.login(countryCode, phone, password)
                 .compose(RxUtils.applySchedulers(mRootView))//线程调度
                 .subscribe(new MyErrorHandleSubscriber<UserDetailEntity>(mErrorHandler) {
+
+
                     @Override
                     public void onSuccessData(UserDetailEntity data) {
 
@@ -63,14 +65,7 @@ public class Second_pagePresenter extends BasePresenter<Second_pageContract.Mode
 
 
                 });
-//                .subscribe(new ErrorHandleSubscriber<UserDetailEntity>(mErrorHandler) {
-//                    @Override
-//                    public void onNext(UserDetailEntity userDetailEntity) {
-//
-//                    }
-//
-//
-//                });
+
     }
 
 

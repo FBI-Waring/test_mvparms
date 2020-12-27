@@ -64,22 +64,13 @@ public class Second_pageActivity extends BaseActivity<Second_pagePresenter> impl
     @Override
     public void initData(@Nullable Bundle savedInstanceState) {
 
-        Intent intent = new Intent(
-                Intent.ACTION_VIEW, Uri.parse("open://kongmingzaixian"));
-        startActivity(intent);
+
 
 
     }
 
-    @Override
-    public void showLoading() {
-        System.out.println("loading");
-    }
 
-    @Override
-    public void hideLoading() {
-        System.out.println("hideloading");
-    }
+
 
     @Override
     public void showMessage(@NonNull String message) {
