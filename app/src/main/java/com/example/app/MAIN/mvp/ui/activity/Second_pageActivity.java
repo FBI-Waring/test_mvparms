@@ -1,5 +1,6 @@
 package com.example.app.MAIN.mvp.ui.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -93,6 +94,11 @@ public class Second_pageActivity extends BaseActivity<Second_pagePresenter> impl
     @Override
     public void loadDataSuccess(UserDetailEntity response) {
         LogUtils.debugInfo(response.toString());
+    }
+
+    @Override
+    public Context getContext() {
+        return Second_pageActivity.this;
     }
 
     @Override

@@ -18,6 +18,8 @@ package com.example.app.common.model.api;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.example.app.common.model.ProgressCancelListener;
+import com.example.app.common.model.ProgressDialogHandler;
 import com.example.app.common.model.bean.response.BasicResponseEntity;
 
 import java.lang.ref.WeakReference;
@@ -36,7 +38,7 @@ import me.jessyan.rxerrorhandler.handler.ErrorHandlerFactory;
  * <a href="https://github.com/JessYanCoding">Follow me</a>
  * ================================================
  */
-public abstract class MyErrorHandleSubscriber<T> implements Observer<BasicResponseEntity<T>> {
+public abstract class MyErrorHandleSubscriber<T> implements Observer<BasicResponseEntity<T>>, ProgressCancelListener {
 
     //public abstract class BaseObserver<T> implements Observer<BaseEntity<T>> {
 
@@ -44,7 +46,10 @@ public abstract class MyErrorHandleSubscriber<T> implements Observer<BasicRespon
     private ErrorHandlerFactory mHandlerFactory;
     private boolean mDontShowRespondMsg = false;
     private boolean mDontShowExceptionMsg = false;
+    private ProgressDialogHandler mProgressDialogHandler;
 
+    protected MyErrorHandleSubscriber() {
+    }
 
     public MyErrorHandleSubscriber(RxErrorHandler rxErrorHandler) {
         this.mHandlerFactory = rxErrorHandler.getHandlerFactory();
@@ -55,15 +60,32 @@ public abstract class MyErrorHandleSubscriber<T> implements Observer<BasicRespon
         this.mDontShowRespondMsg = noShowMsg;
     }
 
-    protected MyErrorHandleSubscriber() {
+
+    public MyErrorHandleSubscriber(Context context, RxErrorHandler rxErrorHandler) {
+        this.mHandlerFactory = rxErrorHandler.getHandlerFactory();
+
+        WeakReference<Context> mViewRef = new WeakReference<>(context);
+        mProgressDialogHandler = new ProgressDialogHandler(mViewRef, this, false);
     }
 
+    public MyErrorHandleSubscriber(Context context, String msg, RxErrorHandler rxErrorHandler) {
+        this.mHandlerFactory = rxErrorHandler.getHandlerFactory();
 
-    
+        WeakReference<Context> mViewRef = new WeakReference<>(context);
+        mProgressDialogHandler = new ProgressDialogHandler(mViewRef, this, msg);
+    }
+
+    public MyErrorHandleSubscriber(Context context, boolean cancelable, String msg, RxErrorHandler rxErrorHandler) {
+        this.mHandlerFactory = rxErrorHandler.getHandlerFactory();
+
+        WeakReference<Context> mViewRef = new WeakReference<>(context);
+        mProgressDialogHandler = new ProgressDialogHandler(mViewRef, this, cancelable, msg);
+    }
 
 
     @Override
     public void onSubscribe(@NonNull Disposable d) {
+        showProgressDialog();
 
     }
 
@@ -83,6 +105,9 @@ public abstract class MyErrorHandleSubscriber<T> implements Observer<BasicRespon
     }
 
     public void onFailed() {
+
+        dismissProgressDialog();
+
     }
 
     private void showMsg(BasicResponseEntity<T> baseResponse) {
@@ -93,29 +118,34 @@ public abstract class MyErrorHandleSubscriber<T> implements Observer<BasicRespon
 
 
     public void onSuccessData(T data) {
-        
+
+        dismissProgressDialog();
 
     }
 
 
     public void onFailedCodeData(int code, T data) {
-        
+
+        dismissProgressDialog();
 
     }
 
 
     public void doError(String errorDescription) {
-        
+
 
         if (!mDontShowExceptionMsg) {
             //todo 显示异常的message
         }
+
+        dismissProgressDialog();
+
     }
 
 
     @Override
     public void onComplete() {
-        
+        dismissProgressDialog();
 
 
     }
@@ -123,7 +153,7 @@ public abstract class MyErrorHandleSubscriber<T> implements Observer<BasicRespon
 
     @Override
     public void onError(@NonNull Throwable t) {
-        
+
 
         t.printStackTrace();
         //如果你某个地方不想使用全局错误处理,则重写 onError(Throwable) 并将 super.onError(e); 删掉
@@ -131,8 +161,36 @@ public abstract class MyErrorHandleSubscriber<T> implements Observer<BasicRespon
         mHandlerFactory.handleError(t);
         String errorTypeDes = ApiException.handleException(t).getMessage();
         doError(errorTypeDes);
+
+        dismissProgressDialog();
+
     }
 
+
+    private void showProgressDialog() {
+        if (mProgressDialogHandler != null) {
+            mProgressDialogHandler.obtainMessage(ProgressDialogHandler.SHOW_PROGRESS_DIALOG).sendToTarget();
+        }
+    }
+
+    private void dismissProgressDialog() {
+        if (mProgressDialogHandler != null) {
+            mProgressDialogHandler.obtainMessage(ProgressDialogHandler.DISMISS_PROGRESS_DIALOG).sendToTarget();
+            mProgressDialogHandler = null;
+        }
+    }
+
+
+    /**
+     * 取消ProgressDialog的时候，取消对observable的订阅，同时也取消了http请求
+     */
+    @Override
+    public void onCancelProgress() {
+        /*todo 如何取消回调*/
+//        if (!this.isUnsubscribed()) {
+//            this.unsubscribe();
+//        }
+    }
 
 }
 

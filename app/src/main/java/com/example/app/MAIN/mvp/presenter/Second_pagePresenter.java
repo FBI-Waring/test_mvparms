@@ -1,6 +1,7 @@
 package com.example.app.MAIN.mvp.presenter;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.example.app.common.model.api.Api;
 import com.example.app.common.model.api.MyErrorHandleSubscriber;
@@ -45,9 +46,11 @@ public class Second_pagePresenter extends BasePresenter<Second_pageContract.Mode
 
     public void Login(String countryCode, String phone, String password) {
 
+        Context context2 = AppManager.getAppManager().getTopActivity();
+        Context context = mRootView.getContext();
         mModel.login(countryCode, phone, password)
                 .compose(RxUtils.applySchedulers(mRootView))//线程调度
-                .subscribe(new MyErrorHandleSubscriber<UserDetailEntity>(mErrorHandler) {
+                .subscribe(new MyErrorHandleSubscriber<UserDetailEntity>(AppManager.getAppManager().getCurrentActivity(), "4597349573", mErrorHandler) {
 
 
                     @Override

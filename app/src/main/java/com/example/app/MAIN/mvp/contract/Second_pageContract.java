@@ -1,5 +1,7 @@
 package com.example.app.MAIN.mvp.contract;
 
+import android.content.Context;
+
 import com.example.app.R;
 import com.example.app.common.model.bean.entity.UserDetailEntity;
 import com.example.app.common.model.bean.response.BasicResponseEntity;
@@ -22,6 +24,8 @@ public interface Second_pageContract {
     interface View extends IView {
 
         void loadDataSuccess(UserDetailEntity response);
+
+        Context getContext();
     }
 
     //Model层定义接口,外部只需关心Model返回的数据,无需关心内部细节,即是否使用缓存
