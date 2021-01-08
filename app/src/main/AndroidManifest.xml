@@ -18,7 +18,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".MAIN.mvp.ui.activity.KotlinActivityActivity"></activity>
+        <activity android:name=".mvp.ui.activity.KotlinActivity"></activity>
+        <activity android:name=".MAIN.mvp.ui.activity.kotlinActivity" />
+        <activity android:name=".MAIN.mvp.ui.activity.KotlinActivityActivity" />
         <activity android:name=".MAIN.mvp.ui.activity.FirstFragmentActivity" />
         <activity android:name=".MAIN.mvp.ui.activity.Second_pageActivity" />
         <!--

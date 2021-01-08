@@ -1,6 +1,8 @@
 import java.text.SimpleDateFormat
 
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 // 定义一个打包时间
 def static releaseTime() {
@@ -128,4 +130,7 @@ dependencies {
 //    implementation 'com.blankj:utilcode:1.11.1'
     //BaseRecyclerViewAdapterHelper
 //    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.47'
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
 }
